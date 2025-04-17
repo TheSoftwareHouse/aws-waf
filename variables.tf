@@ -21,12 +21,6 @@ variable "bad_user_agents" {
   type = list(string)
 }
 
-variable "ip_address_header" {
-  type        = string
-  description = "HTTP Header That Cotains Real Value, Depends If Behind Cloudflare Or Not (CF-Connecting-IP)"
-  default     = "X-Forwarded-For"
-}
-
 variable "aws_managed_rule_groups" {
   type = list(object({
     name                = string
