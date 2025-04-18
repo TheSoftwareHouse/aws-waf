@@ -201,3 +201,29 @@ variable "allowed_requests_alarm_configuration" {
     - observation_period - period in seconds over which the threshold is evaluated
   EOF
 }
+
+variable "blocked_requests_alarm_configuration" {
+  type = object({
+    threshold          = number
+    observation_period = number
+  })
+  default = null
+  description = <<-EOF
+  Configuration for blocked requests alarm:
+    - threshold - number of blocked requests that will trigger the alarm
+    - observation_period - period in seconds over which the threshold is evaluated
+  EOF
+}
+
+variable "counted_requests_alarm_configuration" {
+  type = object({
+    threshold          = number
+    observation_period = number
+  })
+  default = null
+  description = <<-EOF
+  Configuration for counted requests alarm:
+    - threshold - number of counted requests that will trigger the alarm
+    - observation_period - period in seconds over which the threshold is evaluated
+  EOF
+}

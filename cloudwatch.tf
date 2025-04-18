@@ -93,3 +93,59 @@ resource "aws_cloudwatch_metric_alarm" "allowed_requests_alarm" {
 
   tags = var.tags
 }
+
+resource "aws_cloudwatch_metric_alarm" "blocked_requests_alarm" {
+  count = var.blocked_requests_alarm_configuration != null ? 1 : 0
+
+  alarm_name = "${var.name}-blocked-requests-alarm"
+
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "BlockedRequests"
+  namespace           = "AWS/WAFV2"
+
+  period             = var.blocked_requests_alarm_configuration.observation_period
+  threshold          = var.blocked_requests_alarm_configuration.threshold
+  statistic          = "Sum"
+  treat_missing_data = "notBreaching"
+
+  dimensions = merge(
+    var.scope == "REGIONAL" ? { Region = data.aws_region.current.name } : {},
+    {
+      WebACL = aws_wafv2_web_acl.main.name
+    }
+  )
+
+  alarm_actions = var.enable_cloudwatch_notifications_to_slack ? [one(aws_sns_topic.waf_cloudwatch_notifications[*].arn)] : []
+  ok_actions    = var.enable_cloudwatch_notifications_to_slack ? [one(aws_sns_topic.waf_cloudwatch_notifications[*].arn)] : []
+
+  tags = var.tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "counted_requests_alarm" {
+  count = var.counted_requests_alarm_configuration != null ? 1 : 0
+
+  alarm_name = "${var.name}-counted-requests-alarm"
+
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "CountedRequests"
+  namespace           = "AWS/WAFV2"
+
+  period             = var.counted_requests_alarm_configuration.observation_period
+  threshold          = var.counted_requests_alarm_configuration.threshold
+  statistic          = "Sum"
+  treat_missing_data = "notBreaching"
+
+  dimensions = merge(
+    var.scope == "REGIONAL" ? { Region = data.aws_region.current.name } : {},
+    {
+      WebACL = aws_wafv2_web_acl.main.name
+    }
+  )
+
+  alarm_actions = var.enable_cloudwatch_notifications_to_slack ? [one(aws_sns_topic.waf_cloudwatch_notifications[*].arn)] : []
+  ok_actions    = var.enable_cloudwatch_notifications_to_slack ? [one(aws_sns_topic.waf_cloudwatch_notifications[*].arn)] : []
+
+  tags = var.tags
+}
