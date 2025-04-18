@@ -109,30 +109,47 @@ variable "geo_match_rules" {
   EOF
 }
 
+variable "enable_cloudwatch_notifications_to_slack" {
+  description = "Flag to enable sending CloudWatch alarm notifications to Slack."
+  type        = bool
+  default     = false
+}
+
+variable "cloudwatch_alarms_slack_webhook_url" {
+  description = "Slack webhook URL for CloudWatch alarm notifications."
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "cloudwatch_alarms_slack_channel" {
+  description = "Slack channel for CloudWatch alarm notifications."
+  type        = string
+  default     = ""
+}
+
+variable "cloudwatch_alarms_slack_username" {
+  description = "Slack username for CloudWatch alarm notifications."
+  type        = string
+  default     = "WAF-Alarms"
+}
+
 variable "cloudwatch" {
   type = object({
     enable_dashboard            = bool
     enable_logging              = bool
     enable_alarms_notifications = bool
-    alarms_config = object({
-      sns_topic_arn_blocked = string
-      sns_topic_arn_counted = string
-    })
   })
   default = {
     enable_dashboard            = true
     enable_logging              = true
     enable_alarms_notifications = false
-    alarms_config               = null
   }
   description = <<-EOF
   Configuration of cloudwatch services related to WAF like logging/alarms/dashboards
     - enable_dashboard - whether to enable cloudwatch dashboard that displays WebACL metrics
     - enable_logging - whether to enable logging. it needs to be enabled in order to enable dashboards
     - enable_alarms_notifications - whether to enable alarms notifications
-    - alarms_config - cloudwatch alarms configuration. If you want this module to create SNS topics for you just set alarms_config to null.
-        - sns_topic_arn_blocked - topic where alarms for blocked requests metrics will be send
-        - sns_topic_arn_counted - topic where alarms for counted requests metrics will be send
   EOF
 }
 

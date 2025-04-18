@@ -1,9 +1,4 @@
 locals {
-  sns_topic_arns = {
-    BlockedRequests = try(var.cloudwatch.alarms_config.sns_topic_arn_blocked, one(aws_sns_topic.sns_topic_blocked[*].arn))
-    CountedRequests = try(var.cloudwatch.alarms_config.sns_topic_arn_counted, one(aws_sns_topic.sns_topic_counted[*].arn))
-  }
-
   managed_rules = { for rule in var.aws_managed_rule_groups : rule.name => rule }
 
   rules_with_alarm_configuration = {
@@ -65,8 +60,8 @@ resource "aws_cloudwatch_metric_alarm" "cw_rule_alarms" {
     }
   )
 
-  alarm_actions = var.cloudwatch.enable_alarms_notifications ? [local.sns_topic_arns[each.value.alarm_dimension]] : []
-  ok_actions    = var.cloudwatch.enable_alarms_notifications ? [local.sns_topic_arns[each.value.alarm_dimension]] : []
+  alarm_actions = var.enable_cloudwatch_notifications_to_slack ? [one(aws_sns_topic.waf_cloudwatch_notifications[*].arn)] : []
+  ok_actions    = var.enable_cloudwatch_notifications_to_slack ? [one(aws_sns_topic.waf_cloudwatch_notifications[*].arn)] : []
 
   tags = var.tags
 }
