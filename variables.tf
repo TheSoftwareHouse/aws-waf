@@ -136,20 +136,17 @@ variable "cloudwatch_alarms_slack_username" {
 
 variable "cloudwatch" {
   type = object({
-    enable_dashboard            = bool
-    enable_logging              = bool
-    enable_alarms_notifications = bool
+    enable_dashboard = bool
+    enable_logging   = bool
   })
   default = {
-    enable_dashboard            = true
-    enable_logging              = true
-    enable_alarms_notifications = false
+    enable_dashboard = true
+    enable_logging   = true
   }
   description = <<-EOF
   Configuration of cloudwatch services related to WAF like logging/alarms/dashboards
     - enable_dashboard - whether to enable cloudwatch dashboard that displays WebACL metrics
     - enable_logging - whether to enable logging. it needs to be enabled in order to enable dashboards
-    - enable_alarms_notifications - whether to enable alarms notifications
   EOF
 }
 
