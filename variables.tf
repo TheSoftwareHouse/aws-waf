@@ -191,3 +191,16 @@ variable "regex_bad_urls" {
   type    = list(string)
   default = [".git", "wp-", ".env"]
 }
+
+variable "allowed_requests_alarm_configuration" {
+  type = object({
+    threshold          = number
+    observation_period = number
+  })
+  default = null
+  description = <<-EOF
+  Configuration for allowed requests alarm:
+    - threshold - number of allowed requests that will trigger the alarm
+    - observation_period - period in seconds over which the threshold is evaluated
+  EOF
+}
